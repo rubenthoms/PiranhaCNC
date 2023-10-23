@@ -1,65 +1,76 @@
 {
-  "name": "piranha.cnc",
-  "version": "0.1.0",
-  "private": true,
-  "license": "MIT",
-  "homepage": "./",
-  "main": "build/electron/main.js",
-  "dependencies": {
-    "@emotion/react": "^11.10.4",
-    "@emotion/styled": "^11.10.4",
-    "@monaco-editor/react": "^4.4.6",
-    "@mui/icons-material": "^5.10.9",
-    "@mui/material": "^5.10.10",
-    "@mui/styles": "^5.10.10",
-    "@testing-library/jest-dom": "^5.16.5",
-    "@testing-library/react": "^13.4.0",
-    "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.5.2",
-    "@types/node": "^16.11.68",
-    "@types/react": "^18.0.21",
-    "@types/react-dom": "^18.0.6",
-    "monaco-editor": "^0.34.1",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "react-monaco-editor": "^0.50.1",
-    "react-scripts": "5.0.1",
-    "typescript": "^4.8.4",
-    "web-vitals": "^2.1.4"
-  },
-  "scripts": {
-    "start": "react-scripts start",
-    "build": "react-scripts build",
-    "electron:dev": "concurrently \"cross-env BROWSER=none npm run start\" \"(wait-on http://localhost:3000) -and (tsc -p electron -w)\" \"(wait-on http://localhost:3000) -and ((tsc -p electron) -and (cross-env NODE_ENV=development electron .))\"",
-    "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "electron:build": "tsc -p ./electron",
-    "electron": "cross-env NODE_ENV=development electron ."
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
+    "name": "piranha-cnc",
+    "version": "0.5.0",
+    "license": "MIT",
+    "main": "main/index.js",
+    "author": {
+        "name": "Maximilian Stümpfl"
+    },
+    "description": "Starter using Vite 2+ React +Typescript + Electron for fast prototyping.",
+    "keywords": [
+        "vite",
+        "react",
+        "electron",
+        "typescript"
     ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
-  },
-  "devDependencies": {
-    "@electron/notarize": "^1.2.3",
-    "concurrently": "^7.4.0",
-    "cross-env": "^7.0.3",
-    "electron": "^21.2.0",
-    "electron-builder": "^23.6.0",
-    "electron-reload": "^2.0.0-alpha.1"
-  }
+    "repository": {
+        "url": "https://github.com/lTimeless/vite-reactts-electron-starter"
+    },
+    "productName": "vite-reactts-electron-starter",
+    "scripts": {
+        "dev": "concurrently \"npm run dev:vite\" \" npm run dev:electron\"",
+        "dev:vite": "vite",
+        "dev:electron": "npm run build:electron && electron .",
+        "build": "npm run build:vite && npm run build:electron",
+        "build:vite": "vite build",
+        "build:electron": "tsc -p electron",
+        "dist": "npm run build && electron-builder",
+        "pack": "npm run build && electron-builder --dir",
+        "clean": "rimraf dist main src/out",
+        "type-check": "tsc",
+        "lint": "eslint . --ext js,jsx,ts,tsx",
+        "lint:fix": "eslint . --ext js,jsx,ts,tsx --fix"
+    },
+    "dependencies": {
+        "@vitejs/plugin-react": "^1.2.0",
+        "electron-is-dev": "^2.0.0",
+        "flowbite-react": "^0.6.4",
+        "react": "^18.0.2",
+        "react-dom": "^18.0.2",
+        "serialport": "^12.0.0",
+        "vite": "^2.8.6"
+    },
+    "devDependencies": {
+        "@types/node": "^17.0.22",
+        "@types/react": "^18.0.41",
+        "@types/react-dom": "^18.0.14",
+        "@typescript-eslint/eslint-plugin": "5.16.0",
+        "@typescript-eslint/parser": "5.16.0",
+        "autoprefixer": "^10.4.4",
+        "concurrently": "^7.0.0",
+        "electron": "^17.1.2",
+        "electron-builder": "^22.14.13",
+        "eslint": "8.11.0",
+        "eslint-config-airbnb": "19.0.4",
+        "eslint-config-prettier": "8.5.0",
+        "eslint-plugin-import": "^2.25.4",
+        "eslint-plugin-jsx-a11y": "^6.5.1",
+        "eslint-plugin-prettier": "4.0.0",
+        "eslint-plugin-react": "^7.29.4",
+        "postcss": "^8.4.12",
+        "prettier": "2.6.0",
+        "tailwindcss": "^3.0.23",
+        "typescript": "^4.6.2",
+        "vite-plugin-svgr": "^4.1.0"
+    },
+    "build": {
+        "asar": true,
+        "files": [
+            "main",
+            "src/out"
+        ],
+        "directories": {
+            "buildResources": "resources"
+        }
+    }
 }

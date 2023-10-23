@@ -1,18 +1,28 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
-import Editor, {loader} from "@monaco-editor/react";
-import * as monaco from "monaco-editor";
+import React, { useEffect, useState } from "react";
+import AppBar from "./AppBar";
 
-loader.config({monaco});
+import { LoadingScreen } from "./LoadingScreen";
+import { SerialConnection } from "../electron/src/drivers/grbl/grblDriver";
 
 function App() {
-  return (
-    <div className="App">
-      <Editor theme='vs-dark'
-          height="100vh" />
-    </div>
-  );
+    console.log(window.ipcRenderer);
+
+    const [isOpen, setOpen] = useState(false);
+    const [isSent, setSent] = useState(false);
+    const [fromMain, setFromMain] = useState<string | null>(null);
+
+    return (
+        <div className="flex flex-col h-screen rounded bg-background">
+            {window.Main && (
+                <div className="flex-none">
+                    <AppBar />
+                </div>
+            )}
+            <div className="flex-auto">
+                <LoadingScreen />
+            </div>
+        </div>
+    );
 }
 
 export default App;

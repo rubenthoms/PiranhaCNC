@@ -1,13 +1,24 @@
 {
     "compilerOptions": {
-      "target": "es2017",
+      "allowJs": true,
+      "alwaysStrict": true,
+      "esModuleInterop": true,
+      "forceConsistentCasingInFileNames": true,
+      "isolatedModules": true,
+      "jsx": "preserve",
+      "lib": ["dom", "es2017"],
       "module": "commonjs",
-      "sourceMap": true,
+      "moduleResolution": "node",
+      "noEmit": false,
+      "noFallthroughCasesInSwitch": true,
+      "noUnusedLocals": true,
+      "noUnusedParameters": true,
+      "resolveJsonModule": true,
+      "skipLibCheck": true,
       "strict": true,
-      "outDir": "../build",
-      "rootDir": "../",
-      "baseUrl": "../",
-      "noEmitOnError": true,
-      "resolveJsonModule": true
+      "target": "esnext",
+      "outDir": "../main"
     },
+    "exclude": ["node_modules"],
+    "include": ["**/*.ts", "**/*.tsx", "**/*.js"]
   }
