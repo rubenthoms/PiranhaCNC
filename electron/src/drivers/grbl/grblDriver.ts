@@ -1,59 +1,51 @@
-import { SerialPort } from "serialport";
+import { CncDriver, CncDriverOptions } from "../CncDriver";
+import { SerialConnection, SerialConnectionEvent } from "../../lib/SerialConnection";
 
-/*
-const DATABITS = Object.freeze([5, 6, 7, 8]);
-const STOPBITS = Object.freeze([1, 2]);
-const PARITY = Object.freeze(["none", "even", "mark", "odd", "space"]);
-const FLOWCONTROLS = Object.freeze(["rtscts", "xon", "xoff", "xany"]);
-
-const defaultSettings = Object.freeze({
-    baudRate: 115200,
-    dataBits: 8,
-    stopBits: 1,
-    parity: "none",
-    rtscts: false,
-    xon: false,
-    xoff: false,
-    xany: false
-});
-*/
-
-export class SerialConnection {
-    private _port: SerialPort;
-
-    constructor() {
-        this._port = new SerialPort(
-            {
-                path: "/dev/ttyS3",
-                baudRate: 115200
-            },
-            (err) => {
-                if (err) {
-                    console.error(err);
-                }
-            }
-        );
-
-        this._port.on("readable", () => {
-            console.log("Data:", this._port.read());
-        });
-    }
-
-    isOpen() {}
-
-    open() {}
-
-    close() {}
-
-    write(data: string) {
-        this._port.write(data, (err) => {
-            if (err) {
-                console.error(err);
-            }
-
-            console.log("Data written");
-        });
-    }
+export interface GrblDriverOptions extends CncDriverOptions {
+    port: string;
+    baudRate: number;
+    rtscts: boolean;
+    pin: number;
 }
 
-export class GrblDriver {}
+function writeFilter(data: string) {
+    return data;
+}
+
+export class GrblDriver extends CncDriver {
+    protected _type = "GrblDriver";
+    private _serialConnection: SerialConnection;
+
+    constructor(options: GrblDriverOptions) {
+        super();
+        this._serialConnection = new SerialConnection({
+            path: options.port,
+            baudRate: options.baudRate,
+            rtscts: options.rtscts,
+            writeFilter
+        });
+        this._logger.info(`Created GrblDriver with options: ${JSON.stringify(options)}`);
+
+        this._serialConnection.subscribe(SerialConnectionEvent.Data, (data) => {
+            this._logger.info(`Received data: ${data}`);
+        });
+
+        this._serialConnection.subscribe(SerialConnectionEvent.Error, (error) => {
+            this._logger.error(`Serial connection error: ${error}`);
+        });
+
+        this._serialConnection.subscribe(SerialConnectionEvent.Open, () => {
+            this._logger.info(`Serial connection opened`);
+        });
+
+        this._serialConnection.subscribe(SerialConnectionEvent.Close, () => {
+            this._logger.info(`Serial connection closed`);
+        });
+
+        this._serialConnection.open();
+    }
+
+    async connect() {
+        await this._serialConnection.open();
+    }
+}

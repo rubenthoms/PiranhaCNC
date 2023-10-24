@@ -2,7 +2,9 @@ import React, { useEffect, useState } from "react";
 import AppBar from "./AppBar";
 
 import { LoadingScreen } from "./LoadingScreen";
-import { SerialConnection } from "../electron/src/drivers/grbl/grblDriver";
+import { DriverSettings } from "./components/DriverSettings";
+
+import "flowbite/dist/flowbite.min.css";
 
 function App() {
     console.log(window.ipcRenderer);
@@ -19,7 +21,7 @@ function App() {
                 </div>
             )}
             <div className="flex-auto">
-                <LoadingScreen />
+                <DriverSettings />
             </div>
         </div>
     );

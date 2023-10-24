@@ -4,7 +4,13 @@ import { join } from "path";
 // Packages
 import { BrowserWindow, app, ipcMain, IpcMainEvent } from "electron";
 import isDev from "electron-is-dev";
-import { SerialConnection } from "./src/drivers/grbl/grblDriver";
+import { SerialPort } from "serialport";
+import { PortInfo } from "@serialport/bindings-interface";
+
+import { MainController } from "./src/MainController";
+import { DriverOptionsMap } from "./src/drivers/DriverFactory";
+
+const mainController = new MainController();
 
 const height = 600;
 const width = 800;
@@ -51,16 +57,34 @@ function createWindow() {
     ipcMain.on("close", () => {
         window.close();
     });
+
+    ipcMain.handle("dialog:openFile", async () => {
+        // const result = await dialog.showOpenDialog(window, {
+        //     properties: ["openFile"]
+        // });
+        // if (!result.canceled) {
+        //     mainController.openFile(result.filePaths[0]);
+        // }
+    });
+
+    ipcMain.on(
+        "set-cnc-driver",
+        <T extends keyof DriverOptionsMap>(_: any, cncDriverName: T, options: DriverOptionsMap[T]) => {
+            mainController.setCncDriver(cncDriverName, options);
+        }
+    );
+
+    ipcMain.handle("serialPort:getAvailableSerialPorts", async (): Promise<PortInfo[]> => {
+        const ports = await SerialPort.list();
+        return ports;
+    });
 }
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
 // Some APIs can only be used after this event occurs.
-app.whenReady().then(() => {
+app.whenReady().then(async () => {
     createWindow();
-
-    const serialConnection = new SerialConnection();
-    serialConnection.write("?");
 
     app.on("activate", () => {
         // On macOS it's common to re-create a window in the app when the

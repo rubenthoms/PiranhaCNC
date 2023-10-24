@@ -40,6 +40,18 @@ const theme: CustomFlowbiteTheme = {
             light: "bg-light dark:bg-light",
             dark: "bg-dark dark:bg-dark"
         }
+    },
+    label: {
+        root: {
+            colors: {
+                default: "text-onBackground"
+            }
+        }
+    },
+    select: {
+        field: {
+            base: "w-full px-3 py-2 text-base leading-normal bg-transparent border rounded appearance-none focus:outline-none focus:shadow-outline"
+        }
     }
 };
 
