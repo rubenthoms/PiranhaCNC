@@ -22,10 +22,13 @@ const api = {
         ipcRenderer.invoke("dialog:openFile");
     },
     getAvailableSerialPorts: (): Promise<PortInfo[]> => {
-        return SerialPort.list();
+        return ipcRenderer.invoke("serialPort:getAvailableSerialPorts");
     },
-    setCncDriver: <T extends keyof DriverOptionsMap>(cncDriverName: T, options: DriverOptionsMap[T]) => {
-        ipcRenderer.send("set-cnc-driver", cncDriverName, options);
+    setCncDriver: <T extends keyof DriverOptionsMap>(
+        cncDriverName: T,
+        options: DriverOptionsMap[T]
+    ): Promise<boolean> => {
+        return ipcRenderer.invoke("mainController:setCncDriver", cncDriverName, options);
     },
     /**
     Here function for AppBar

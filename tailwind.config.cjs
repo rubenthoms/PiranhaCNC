@@ -1,3 +1,5 @@
+const colors = require("tailwindcss/colors");
+
 module.exports = {
     content: ["./src/index.html", "./src/**/*.{vue,js,ts,jsx,tsx}", "node_modules/flowbite-react/**/*.{js,jsx,ts,tsx}"],
     theme: {
@@ -65,7 +67,8 @@ module.exports = {
             onSecondary: "#000000",
             onBackground: "#0a0f0d",
             onSurface: "#0a0f0d",
-            onError: "#ffffff"
+            onError: "#ffffff",
+            ...colors
         }
     },
     variants: {

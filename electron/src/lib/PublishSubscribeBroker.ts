@@ -1,4 +1,4 @@
-export class PublishSubscribeBroker<TTopicsDataMap extends Record<string, any>> {
+export class MessageBroker<TTopicsDataMap extends Record<string, any>> {
     private __subscribers: Map<keyof TTopicsDataMap, Set<(data?: TTopicsDataMap[keyof TTopicsDataMap]) => void>> =
         new Map();
 

@@ -1,5 +1,6 @@
 {
     "compilerOptions": {
+        "baseUrl": ".",
         "target": "ESNext",
         "lib": ["DOM", "DOM.Iterable", "ESNext"],
         "types": ["vite/client", "node", "vite-plugin-svgr/client"],
@@ -17,5 +18,7 @@
         "jsx": "react"
     },
     "exclude": ["node_modules"],
-    "include": ["**/*.ts", "**/*.tsx", "**/*.js"]
+    "include": ["src", "electron"],
+    "references": [{ "path": "./tsconfig.node.json" }],
+    "extends": "./aliases.json"
 }

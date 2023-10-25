@@ -1,24 +1,33 @@
-import react from '@vitejs/plugin-react';
-import svgr from 'vite-plugin-svgr';
-import { UserConfig, ConfigEnv } from 'vite';
-import { join } from 'path';
+import react from "@vitejs/plugin-react";
+import svgr from "vite-plugin-svgr";
+import { UserConfig, ConfigEnv } from "vite";
+import path, { join } from "path";
 
-const srcRoot = join(__dirname, 'src');
+import aliases from "./aliases.json";
+
+const srcRoot = join(__dirname, "src");
 
 export default ({ command }: ConfigEnv): UserConfig => {
     // DEV
-    if (command === 'serve') {
+    if (command === "serve") {
         return {
             root: srcRoot,
-            base: '/',
+            base: "/",
             plugins: [react(), svgr()],
             resolve: {
-                alias: {
-                    '/@': srcRoot
-                }
+                alias: Object.keys(aliases.compilerOptions.paths).reduce(
+                    (prev, current) => ({
+                        ...prev,
+                        [current.replace("/*", "")]: path.resolve(
+                            __dirname,
+                            aliases.compilerOptions.paths[current][0].replace("/*", "")
+                        )
+                    }),
+                    {}
+                )
             },
             build: {
-                outDir: join(srcRoot, '/out'),
+                outDir: join(srcRoot, "/out"),
                 emptyOutDir: true,
                 rollupOptions: {}
             },
@@ -26,22 +35,22 @@ export default ({ command }: ConfigEnv): UserConfig => {
                 port: process.env.PORT === undefined ? 3000 : +process.env.PORT
             },
             optimizeDeps: {
-                exclude: ['path']
+                exclude: ["path"]
             }
         };
     }
     // PROD
     return {
         root: srcRoot,
-        base: './',
+        base: "./",
         plugins: [react()],
         resolve: {
             alias: {
-                '/@': srcRoot
+                "/@": srcRoot
             }
         },
         build: {
-            outDir: join(srcRoot, '/out'),
+            outDir: join(srcRoot, "/out"),
             emptyOutDir: true,
             rollupOptions: {}
         },
@@ -49,7 +58,7 @@ export default ({ command }: ConfigEnv): UserConfig => {
             port: process.env.PORT === undefined ? 3000 : +process.env.PORT
         },
         optimizeDeps: {
-            exclude: ['path']
+            exclude: ["path"]
         }
     };
 };

@@ -1,5 +1,5 @@
 import { Logger } from "../lib/Logger";
-import { PublishSubscribeBroker } from "../lib/PublishSubscribeBroker";
+import { MessageBroker } from "../lib/PublishSubscribeBroker";
 
 export enum OperatingState {
     Idle,
@@ -30,7 +30,7 @@ export interface CncDriverEvents {
 
 export interface CncDriverOptions {}
 
-export class CncDriver extends PublishSubscribeBroker<CncDriverEvents> {
+export class CncDriver extends MessageBroker<CncDriverEvents> {
     protected _type = "CncDriver";
     protected _logger: Logger = new Logger(this._type);
 

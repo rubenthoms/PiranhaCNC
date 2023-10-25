@@ -1,0 +1,33 @@
+{
+    "compilerOptions": {
+        "esModuleInterop": true,
+        "paths": {
+            "@assets/*": ["src/assets/*"],
+            "@assets": ["src/assets/"],
+            "@components/*": ["src/components/*"],
+            "@components": ["src/components/"],
+            "@framework": ["src/framework"],
+            "@framework/*": ["src/framework/*"],
+            "@global": ["src/global"],
+            "@global/*": ["src/global/*"],
+            "@hooks/*": ["src/hooks/*"],
+            "@hooks": ["src/hooks"],
+            "@redux/*": ["src/redux/*"],
+            "@redux": ["src/redux"],
+            "@root/*": ["./*"],
+            "@root": ["./"],
+            "@services/*": ["src/services/*"],
+            "@services": ["src/services"],
+            "@shared-types/*": ["src/shared-types/*"],
+            "@shared-types": ["src/shared-types"],
+            "@src/*": ["src/*"],
+            "@src": ["src/"],
+            "@stores/*": ["src/stores/*"],
+            "@stores": ["src/stores"],
+            "@utils/*": ["src/utils/*"],
+            "@utils": ["src/utils/"],
+            "@workers/*": ["src/workers/*"],
+            "@workers": ["src/workers"]
+        }
+    }
+}

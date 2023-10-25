@@ -6,9 +6,13 @@ export class MainController {
 
     constructor() {}
 
-    setCncDriver<T extends keyof DriverOptionsMap>(cncDriver: T, options: DriverOptionsMap[T]) {
-        console.log("setCncDriver");
-        this._cncDriver = DriverFactory.createDriver(cncDriver, options);
+    setCncDriver<T extends keyof DriverOptionsMap>(cncDriver: T, options: DriverOptionsMap[T]): boolean {
+        try {
+            this._cncDriver = DriverFactory.createDriver(cncDriver, options);
+            return true;
+        } catch (e) {
+            return false;
+        }
     }
 
     getCncDriver(): CncDriver {

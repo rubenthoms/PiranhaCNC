@@ -1,5 +1,5 @@
 import { ReadlineParser, SerialPort } from "serialport";
-import { PublishSubscribeBroker } from "./PublishSubscribeBroker";
+import { MessageBroker } from "./PublishSubscribeBroker";
 import { Logger } from "./Logger";
 
 export interface SerialConnectionSettings {
@@ -41,14 +41,14 @@ export interface SerialConnectionEvents {
     [SerialConnectionEvent.Close]: null;
 }
 
-export class SerialConnection extends PublishSubscribeBroker<SerialConnectionEvents> {
+export class SerialConnection {
     private _settings: Required<SerialConnectionSettings>;
     private _port: SerialPort | null = null;
     private _parser: ReadlineParser | null = null;
     private _logger: Logger = new Logger("SerialConnection");
+    private _messageBroker: MessageBroker<SerialConnectionEvents> = new MessageBroker();
 
     constructor(customSettings: SerialConnectionSettings) {
-        super();
         this._settings = { ...defaultSettings, ...customSettings };
 
         this._logger.info(`Created SerialConnection with settings: ${JSON.stringify(this._settings)}`);
@@ -56,6 +56,10 @@ export class SerialConnection extends PublishSubscribeBroker<SerialConnectionEve
 
     isOpen(): boolean {
         return this._port?.isOpen ?? false;
+    }
+
+    getMessageBroker() {
+        return this._messageBroker;
     }
 
     async open() {
@@ -74,20 +78,20 @@ export class SerialConnection extends PublishSubscribeBroker<SerialConnectionEve
 
             this._parser = this._port.pipe(new ReadlineParser({ delimiter: "\n" }));
             this._parser.on("data", (data) => {
-                this.publish(SerialConnectionEvent.Data, data);
+                this._messageBroker.publish(SerialConnectionEvent.Data, data);
             });
 
             this._port.on("error", (err) => {
-                this.publish(SerialConnectionEvent.Error, err);
+                this._messageBroker.publish(SerialConnectionEvent.Error, err);
             });
 
             this._port.on("open", () => {
                 resolve(null);
-                this.publish(SerialConnectionEvent.Open, null);
+                this._messageBroker.publish(SerialConnectionEvent.Open, null);
             });
 
             this._port.on("close", () => {
-                this.publish(SerialConnectionEvent.Close, null);
+                this._messageBroker.publish(SerialConnectionEvent.Close, null);
             });
 
             this._port.open();
@@ -126,5 +130,10 @@ export class SerialConnection extends PublishSubscribeBroker<SerialConnectionEve
 
             this._logger.info(`Data written: ${data}`);
         });
+    }
+
+    destroy() {
+        this.close();
+        this._parser = null;
     }
 }
